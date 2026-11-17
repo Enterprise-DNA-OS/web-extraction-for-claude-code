@@ -1,13 +1,39 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Web Extraction for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Extraction week",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Source health",
+        "sql": "select name,owner,status,next_due,pending,overdue_tasks from source_health order by name"
+      },
+      {
+        "title": "Open follow-ups",
+        "sql": "select title,owner,due_date from tasks where status='open' order by due_date"
+      }
+    ]
+  },
+  {
+    "name": "quality",
+    "title": "Quality and changes",
+    "sections": [
+      {
+        "title": "Changed records",
+        "sql": "select source,record_key,change,decision,missing_fields from changed_records order by source,record_key"
+      }
+    ]
+  },
+  {
+    "name": "permissions",
+    "title": "Collection evidence",
+    "sections": [
+      {
+        "title": "Review calendar",
+        "sql": "select name,owner,permission_until,retention_review from sources order by permission_until"
+      },
+      {
+        "title": "Record gaps",
+        "sql": "select name,rule,finding from compliance_gaps order by name,rule"
       }
     ]
   }

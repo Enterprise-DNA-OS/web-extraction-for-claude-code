@@ -1,11 +1,39 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "source-review",
+    "title": "Source review record",
+    "for_each": "select id,name from sources order by name",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Permission and purpose",
+        "layout": "record",
+        "sql": "select name,url,owner,purpose,permission_ref,permission_until,retention_review,status from sources where id=$1"
+      },
+      {
+        "title": "Extraction history",
+        "sql": "select captured_at,mode,status,row_count,issue_count,error from runs where source_id=$1 order by captured_at desc"
+      },
+      {
+        "title": "Follow-up work",
+        "sql": "select title,owner,due_date,status,resolution from tasks where source_id=$1 order by due_date"
+      }
+    ]
+  },
+  {
+    "name": "quality-handover",
+    "title": "Data quality handover",
+    "for_each": "select id,name from sources order by name",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Current records",
+        "sql": "select record_key,decision,missing_fields,payload from current_records where source_id=$1 order by record_key"
+      },
+      {
+        "title": "Changes to source rules",
+        "sql": "select action,operator,reason,evidence_ref,created_at from audit_events where entity_id=$1 order by created_at"
+      }
     ]
   }
 ]

@@ -1,5 +1,33 @@
-# Slash commands
+# Command library
 
-One file per recurring job. Each command tells Claude Code exactly which CLI command to run and how to present the result, so the operator never re-explains the job.
-
-Add a command every time the same ask comes twice. Frontmatter needs a `description:` line. The body is the brief.
+- `/sources`: Read source owners, locations and review dates.
+- `/recipes`: Inspect versioned field mappings and row bounds.
+- `/runs`: Read complete and failed capture history.
+- `/records`: Read the current complete snapshot for each source.
+- `/due-runs`: Plan the next capture cycle.
+- `/change-review`: Review new and changed records.
+- `/quality-review`: Find missing fields before accepting data.
+- `/permission-review`: Review collection evidence and retention dates.
+- `/attention`: Prioritise overdue capture and follow-up work.
+- `/compliance`: Check recorded collection purpose, permission and retention controls.
+- `/history`: Inspect application audit events.
+- `/tasks`: Read follow-up owners, deadlines and resolutions.
+- `/insights`: Answer the ten included business questions.
+- `/weekly-review`: Prepare the weekly extraction handover.
+- `/show`: Read one full record and its history.
+- `/add-source`: Register a permitted source and accountable owner.
+- `/configure-recipe`: Version a tested static-page extraction recipe.
+- `/set-source`: Record updated ownership, permission or pause status.
+- `/import`: Bring a complete Import.io CSV snapshot across.
+- `/extract-file`: Extract records from a permitted saved HTML capture.
+- `/fetch`: Collect one permitted public static page.
+- `/run-due`: Collect the next due sources in a controlled batch.
+- `/review`: Accept or hold a current observation.
+- `/log-task`: Assign a source follow-up.
+- `/close-task`: Record a follow-up resolution.
+- `/draft-source-review`: Draft a private source review without sending.
+- `/export`: Write a private archive or approved current feed.
+- `/documents`: Render branded source reviews and quality handovers.
+- `/views`: Render read-only extraction dashboards.
+- `/new-view`: Extend this system through the existing recipe.
+- `/customise`: Extend this system through the existing recipe.

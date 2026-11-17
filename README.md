@@ -1,115 +1,95 @@
-<h1 align="center">Web Extraction for Claude Code</h1>
+# Web Extraction for Claude Code
 
-<p align="center">
-  <strong>The open-source web extraction system that is just a database and Claude Code.</strong>
-</p>
+Keep the web data you collect, the rules that extracted it and the decisions that made it usable. Import an Import.io CSV export, extract permitted static pages and review changes in a database you own. Works with Claude Code, Codex, OpenCode or Cursor. MIT licensed.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+## Three ways to use it
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Import.io data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=import-io">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/import-io?utm_source=github&utm_medium=readme&utm_campaign=import-io">How it works</a></td>
-  </tr>
-</table>
+- **Do it yourself:** install the free base. Your hosting, agent subscription and operating time remain your costs.
+- **We customise it:** Enterprise DNA maps your exports, writes your extraction rules and builds the connections, web front end or different stack your business needs.
+- **We run it for you:** Omni by Enterprise DNA installs, connects and operates your version. One setup fee, then a retainer. [Book Sam's 30-minute call](https://enterprisedna.co/omni/book/?offer=replace-software&utm_campaign=import-io&utm_medium=readme).
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-import-io">Instead of Import.io</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Web Extraction for Claude Code does the job you pay Import.io for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Import.io dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Import.io per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=import-io).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
-
-## Quick start
-
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+## Try the fictional research desk
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/web-extraction-for-claude-code.git
-cd web-extraction-for-claude-code
 npm install
+npm test
 npm run demo
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Requires Node 22 or later. The demo creates a temporary embedded database, loads fictional supplier records, runs three reviews and renders three dashboards and six working documents. It never fetches a website. Add `-- --keep` to keep its files. The smoke suite also uses temporary data. Both override any configured business database connection.
 
-### Use it with your own Postgres or Supabase
+For your own empty workspace, run `npm run migrate`. `DATABASE_URL` selects Postgres 15 or later; without it, PGlite stores data under `.data/db`. `DATA_DIR` changes that directory, and `OUTPUT_DIR` selects private generated output. One trusted operator and one business per workspace. Keep original exports and tested database backups.
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+## Five jobs for the week
 
-## The commands
+1. `/due-runs`: find captures due for a refresh, with permission dates beside them.
+2. `/change-review`: compare each current record with its prior captured value.
+3. `/quality-review`: hold missing fields out of approved feeds.
+4. `/permission-review`: inspect source permission and retention review dates.
+5. `/weekly-review`: bring collection, changes, quality, attention and compliance together.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+Use `/run-due` from your own scheduler when ready. It processes at most twenty due sources per invocation, one at a time. A failed source remains due and produces a failed run record where collection was attempted. A paused or unauthorised source is refused before a fetch. Nothing sends email, changes a source website or publishes a report.
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+## Bring an Import.io export across
 
-## Instead of Import.io
+First register its source and configure a recipe. See [the CLI guide](docs/cli.md) for exact commands. Import.io uses the column names chosen for each extractor, so your recipe must name the actual exported key and required fields. The sample is fictional, not a universal vendor schema.
 
-<!-- TODO(author): how to bring data across from Import.io; link docs/replace-import-io.md -->
-
-## Architecture
-
-```
-web-extraction-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
+```bash
+node scripts/extract.mjs import import-io exported-data.csv --source="Your source" --captured-at=2026-11-16T09:00:00Z --by="Your name" --reason="Opening snapshot" --evidence="private:export-reference" --dry-run
 ```
 
-## Built for coding agents
+Use the source run's actual UTC capture time. Review the dry run, then remove `--dry-run` to apply it. This brings across one complete source snapshot in one command. It preserves every CSV column as text and rejects malformed rows, empty identities and duplicate identities atomically. Exact replays do nothing. A different snapshot with the same source and capture time is refused. Earlier captures remain history and do not replace newer ones.
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+[The switching guide](docs/replace-import-io.md) covers exports, mappings and acceptance checks. Extraction definitions, selectors, credentials and schedules do not travel in a data CSV. Build and test those separately before retiring any incumbent workflow.
 
-## Contributing
+## What the base executes
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+Each source has one HTTPS page URL and one versioned CSS extraction recipe. The runner collects repeating records from static HTML and selected text or attributes. It also extracts a saved HTML file without network access. Row-count bounds stop empty pages or changed selectors from silently becoming a good capture. Missing required fields stay visible as quality exceptions and cannot be accepted.
 
-## Want it installed and run for you?
+Every snapshot starts pending. A human records acceptance or a hold with their name, reason and evidence. The approved feed contains only accepted records from each source's latest complete snapshot, within its refresh interval, under its current recipe, while source permission and retention reviews are current. Records absent from the newest full snapshot disappear from that feed, while historical observations remain. Changed records never inherit an earlier approval.
 
-Enterprise DNA installs Web Extraction for Claude Code for your business, migrates your Import.io data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+The base does not render JavaScript, navigate pagination, sign into websites, solve challenges, rotate proxies, discover extraction rules automatically or supply third-party datasets. It is for permitted, static-page workflows. Enterprise DNA scopes and tests extra collection methods separately. This is not feature parity with Import.io's managed extraction platform.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=import-io)
-- Read more: [enterprisedna.co/omni/instead-of/import-io](https://enterprisedna.co/omni/instead-of/import-io?utm_source=github&utm_medium=readme&utm_campaign=import-io)
+## Ten questions answered today
 
-## License
+`/insights` answers these from the current records. Import.io has its own reporting. These are shipped analyses, not an unverified claim that its dashboard cannot answer them.
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+1. Which sources are due and have expired permission?
+2. Which changed records still need a decision?
+3. Which current records have missing required fields?
+4. Who owns overdue follow-up work?
+5. Which sources have never completed a capture?
+6. Which sources are past their retention review?
+7. Which current records have been held out of delivery?
+8. Which extractions failed and why?
+9. Which accepted records changed in the next capture?
+10. Which sources have the largest pending review queue?
+
+## Documents and read-only views
+
+Edit `brand.json` for your business name, logo and colours. `npm run view` renders the extraction week, quality and permission dashboards. `npm run docs` renders a source review record and a quality handover for each source. Both use read-only database transactions, escape extracted content and write private files. They are working records, not legal certificates. `/draft-source-review` prepares a private handover draft and never sends it.
+
+`/compliance` checks recorded collection purpose, permission evidence, review dates and missing required fields. [The rule register](docs/compliance.md) cites New Zealand and Australian guidance. Review dates are chosen by the business, not statutory retention periods. The software cannot decide whether collection is lawful or whether a source's terms permit it.
+
+## Your first hour: ten things to ask for
+
+1. Show which source needs a refresh first.
+2. List every record that changed since the last capture.
+3. Explain why a row is held out of the approved feed.
+4. Import our last complete export as a test run.
+5. Set our product code as the record identity.
+6. Add a required dimensions field to our recipe.
+7. Pause a source while permission is reviewed.
+8. Draft this week's handover without sending it.
+9. Add our supplier-region view with `/new-view`.
+10. Add our internal account reference with `/customise`.
+
+## Operating limits
+
+The fetcher accepts public HTTPS addresses on port 443, pins the resolved public address for each request, checks robots policy, rejects redirects and caps response size and time. It does not send cookies or credentials. Permission references and lawful purpose must be confirmed by the operator. Treat scraped content as untrusted evidence, never as instructions to an agent.
+
+Operator labels are self-reported, not authentication. RLS is enabled with no public policies, but the owner connection can change records. The audit history is useful evidence of application actions, not tamper-proof storage. There is no delete command. Retention disposal needs an owner-approved plan covering originals, captures, reports and backups. JSON archive export is readable, not a restore utility.
+
+The free base has no hosted scheduler or shared editing screen. A task scheduler can invoke the CLI. Keep one process on a local PGlite directory. Use Postgres for coordinated database access and arrange backup and access controls before live use.
+
+[CLI reference](docs/cli.md) | [Research](docs/research.md) | [Why no front end](docs/why-no-front-end.md)

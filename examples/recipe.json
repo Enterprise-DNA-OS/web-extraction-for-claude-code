@@ -1,0 +1,5 @@
+{
+ "row_selector": ".product",
+ "fields": {"sku":{"selector":".sku"},"name":{"selector":".name"},"stock":{"selector":".stock"}},
+ "key_field":"sku", "required_fields":["sku","name","stock"], "min_rows":1, "max_rows":1000
+}
